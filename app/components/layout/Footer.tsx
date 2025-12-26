@@ -1,47 +1,72 @@
 'use client'
-import Link from 'next/link'
 
+import Link from 'next/link'
 import {
   FaFacebookF,
   FaTwitter,
   FaLinkedinIn,
   FaInstagram,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaMapMarkerAlt,
 } from 'react-icons/fa'
 
 export default function Footer() {
+  const currentYear = new Date().getFullYear()
+
+  const socialLinks = [
+    { Icon: FaFacebookF, href: '#', label: 'Facebook' },
+    { Icon: FaTwitter, href: '#', label: 'Twitter' },
+    { Icon: FaLinkedinIn, href: '#', label: 'LinkedIn' },
+    { Icon: FaInstagram, href: '#', label: 'Instagram' },
+  ]
+
   return (
-    <footer className='bg-[#0A1F44] text-gray-200 pt-16'>
-      <div className='max-w-7xl mx-auto px-6 grid gap-12 md:grid-cols-4'>
+    <footer className='bg-[#0A1F44] text-gray-300 pt-20 border-t border-white/5'>
+      <div className='max-w-7xl mx-auto px-6 grid gap-12 md:grid-cols-2 lg:grid-cols-4 pb-12'>
         {/* Brand / About */}
-        <div>
-          <h3 className='text-2xl font-bold text-white mb-4'>
-            TechDive Innovations
-          </h3>
-          <p className='text-sm leading-relaxed'>
-            Empowering individuals with practical, affordable digital skills to
-            succeed in today’s tech-driven world.
+        <div className='space-y-6'>
+          <Link
+            href='/'
+            className='text-2xl font-bold text-white tracking-tight'
+          >
+            TechDive<span className='text-[#D4AF37]'>.</span>
+          </Link>
+          <p className='text-sm leading-relaxed text-gray-400'>
+            Empowering the next generation of digital talent with practical,
+            affordable, and industry-led tech education in Nigeria.
           </p>
+          {/* Social Icons moved here for better desktop balance */}
+          <div className='flex space-x-3'>
+            {socialLinks.map(({ Icon, label }, index) => (
+              <button
+                key={index}
+                className='w-10 h-10 flex items-center justify-center
+                           bg-white/5 rounded-xl border border-white/10
+                           hover:bg-[#D4AF37] hover:text-[#0A1F44] hover:-translate-y-1
+                           transition-all duration-300'
+                aria-label={label}
+              >
+                <Icon size={18} />
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Quick Links */}
-        <div className='w-full sm:w-auto'>
-          <h4 className='text-lg font-semibold text-white mb-4'>Quick Links</h4>
-
-          <ul className='space-y-3 text-sm'>
+        <div>
+          <h4 className='text-lg font-bold text-white mb-6'>Navigation</h4>
+          <ul className='space-y-4 text-sm'>
             {[
               { label: 'Home', href: '/' },
-              { label: 'About', href: '/about' },
-              { label: 'Courses', href: '/courses' },
-              { label: 'Contact', href: '/contact' },
+              { label: 'About Us', href: '/about' },
+              { label: 'Explore Courses', href: '/courses' },
+              { label: 'Contact Support', href: '/contact' },
             ].map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}
-                  className='block w-fit
-                         text-gray-300
-                         hover:text-[#D4AF37]
-                         focus:text-[#D4AF37]
-                         transition-colors duration-200'
+                  className='hover:text-[#D4AF37] hover:translate-x-1 inline-block transition-all duration-200'
                 >
                   {link.label}
                 </Link>
@@ -52,68 +77,84 @@ export default function Footer() {
 
         {/* Contact Info */}
         <div>
-          <h4 className='text-lg font-semibold text-white mb-4'>Contact Us</h4>
-          <ul className='space-y-2 text-sm'>
-            <li>Email: TechDiveInnovations@gmail.com</li>
-            <li>Phone: +234 XXX XXX XXXX</li>
-            <li>Location: Nigeria</li>
+          <h4 className='text-lg font-bold text-white mb-6'>Get in Touch</h4>
+          <ul className='space-y-4 text-sm'>
+            <li className='flex items-center gap-3'>
+              <FaEnvelope className='text-[#D4AF37]' />
+              <a
+                href='mailto:TechDiveInnovations@gmail.com'
+                className='hover:text-white transition-colors'
+              >
+                TechDiveInnovations@gmail.com
+              </a>
+            </li>
+            <li className='flex items-center gap-3 group'>
+              <FaPhoneAlt className='text-[#D4AF37]' />
+              <div className='flex flex-col'>
+                <a
+                  href='https://wa.me/2349058263561'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='hover:text-[#D4AF37] transition-colors'
+                >
+                  0905 826 3561
+                </a>
+                <a
+                  href='https://wa.me/2349051772499'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='hover:text-[#D4AF37] transition-colors'
+                >
+                  0905 177 2499
+                </a>
+              </div>
+            </li>
+            <li className='flex items-center gap-3'>
+              <FaMapMarkerAlt className='text-[#D4AF37]' />
+              <span>Lagos, Nigeria</span>
+            </li>
           </ul>
         </div>
 
         {/* Newsletter */}
         <div>
-          <h4 className='text-lg font-semibold text-white mb-4'>Newsletter</h4>
-          <p className='text-sm mb-4'>
-            Subscribe to get updates on new courses, programs, and
-            opportunities.
+          <h4 className='text-lg font-bold text-white mb-6'>Stay Updated</h4>
+          <p className='text-sm text-gray-400 mb-6 leading-relaxed'>
+            Subscribe to our newsletter for the latest tech news and course
+            updates.
           </p>
-
-          <form className='flex'>
+          <form className='flex flex-col gap-3'>
             <input
               type='email'
-              placeholder='Your email address'
-              className='w-full px-4 py-2 rounded-l-lg text-white focus:outline-none'
+              placeholder='Email address'
+              className='w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white 
+                         placeholder:text-gray-500 focus:outline-none focus:border-[#D4AF37] transition-all'
             />
             <button
               type='submit'
-              className='bg-[#D4AF37] text-[#0A1F44] px-5 py-2 rounded-r-lg
-                         font-semibold hover:bg-yellow-400 transition'
+              className='bg-[#D4AF37] text-[#0A1F44] px-5 py-3 rounded-xl
+                         font-bold hover:bg-white transition-all duration-300'
             >
-              Subscribe
+              Subscribe Now
             </button>
           </form>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className='border-t border-gray-700 mt-12' />
-
       {/* Bottom Section */}
-      <div
-        className='max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row
-                      justify-between items-center gap-4'
-      >
-        <p className='text-sm'>
-          © {new Date().getFullYear()} TechDive Innovations. All rights
-          reserved.
-        </p>
-
-        {/* Social Icons */}
-        <div className='flex space-x-4'>
-          {[FaFacebookF, FaTwitter, FaLinkedinIn, FaInstagram].map(
-            (Icon, index) => (
-              <button
-                key={index}
-                className='w-9 h-9 flex items-center justify-center
-                           border border-gray-500 rounded-full
-                           hover:border-[#D4AF37] hover:text-[#D4AF37]
-                           transition'
-                aria-label='Social media'
-              >
-                <Icon size={16} />
-              </button>
-            )
-          )}
+      <div className='border-t border-white/5 py-8'>
+        <div className='max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4'>
+          <p className='text-xs text-gray-500'>
+            © {currentYear} TechDive Innovations. All rights reserved.
+          </p>
+          <div className='flex gap-6 text-xs text-gray-500'>
+            <Link href='#' className='hover:text-[#D4AF37]'>
+              Privacy Policy
+            </Link>
+            <Link href='#' className='hover:text-[#D4AF37]'>
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

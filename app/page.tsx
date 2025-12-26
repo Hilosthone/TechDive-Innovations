@@ -7,7 +7,7 @@ import Courses from '../app/components/home/Courses'
 import CTA from '../app/components/home/CTA'
 import FAQ from './components/shared/FAQ'
 import Testimonial from './components/home/Testimonial'
-import Contact from './components/contact/Contact'
+import Contact from './components/contact/page'
 
 export default function HomePage() {
   return (
