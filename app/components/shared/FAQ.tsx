@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FaPlus, FaMinus, FaQuestionCircle } from 'react-icons/fa'
 
 export default function FAQ() {
@@ -44,6 +44,24 @@ export default function FAQ() {
 
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
+  // Create an array of references to track each accordion item
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  const handleToggle = (index: number) => {
+    const isOpening = openIndex !== index
+    setOpenIndex(isOpening ? index : null)
+
+    // Smooth scroll to the item if it's being opened
+    if (isOpening) {
+      setTimeout(() => {
+        itemRefs.current[index]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center', // Centers the item in the viewport
+        })
+      }, 300) // Small delay to allow the animation to start
+    }
+  }
+
   return (
     <section className='py-24 px-6 md:px-20 bg-white' id='faq'>
       <div className='max-w-4xl mx-auto'>
@@ -64,43 +82,46 @@ export default function FAQ() {
             return (
               <div
                 key={index}
+                ref={(el) => {
+                  itemRefs.current[index] = el
+                }}
                 className={`transition-all duration-300 rounded-2xl border ${
                   isOpen
-                    ? 'border-[#D4AF37] bg-gray-50 shadow-lg'
+                    ? 'border-[#D4AF37] bg-gray-50 shadow-lg scale-[1.02]'
                     : 'border-gray-100 bg-white hover:border-[#D4AF37]/50'
                 }`}
                 data-aos='fade-up'
                 data-aos-delay={index * 50}
               >
                 <button
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  onClick={() => handleToggle(index)}
                   className='w-full text-left px-8 py-6 flex justify-between items-center group'
                 >
                   <span
-                    className={`font-bold text-lg transition-colors ${
+                    className={`font-bold text-lg transition-colors pr-4 ${
                       isOpen ? 'text-[#D4AF37]' : 'text-[#0A1F44]'
                     }`}
                   >
                     {item.question}
                   </span>
                   <div
-                    className={`shrink-0 ml-4 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    className={`shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-500 ${
                       isOpen
-                        ? 'bg-[#D4AF37] text-white rotate-180'
+                        ? 'bg-[#D4AF37] text-white rotate-180 shadow-[0_0_15px_rgba(212,175,55,0.4)]'
                         : 'bg-[#0A1F44] text-white'
                     }`}
                   >
-                    {isOpen ? <FaMinus size={12} /> : <FaPlus size={12} />}
+                    {isOpen ? <FaMinus size={14} /> : <FaPlus size={14} />}
                   </div>
                 </button>
 
                 {/* Animated Answer Container */}
                 <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
                     isOpen ? 'max-h-125 opacity-100' : 'max-h-0 opacity-0'
                   }`}
                 >
-                  <div className='px-8 pb-8 text-gray-600 leading-relaxed border-t border-gray-100 pt-4'>
+                  <div className='px-8 pb-8 text-gray-600 leading-relaxed border-t border-gray-100 pt-6'>
                     {item.answer}
                   </div>
                 </div>
@@ -109,20 +130,21 @@ export default function FAQ() {
           })}
         </div>
 
-        {/* Bottom Call to Action */}
+        {/* Bottom CTA */}
         <div
-          className='mt-16 text-center p-8 bg-[#0A1F44] rounded-4xl shadow-xl'
+          className='mt-16 text-center p-10 bg-[#0A1F44] rounded-4xl shadow-2xl border border-white/5'
           data-aos='zoom-in'
         >
-          <p className='text-white mb-4'>
+          <p className='text-white/80 mb-6 text-lg'>
             Still have questions that aren't answered here?
           </p>
           <a
             href='https://wa.me/2349058263561'
             target='_blank'
-            className='inline-block bg-[#D4AF37] text-[#0A1F44] px-8 py-3 rounded-full font-bold hover:bg-white transition-colors'
+            rel='noopener noreferrer'
+            className='inline-block bg-[#D4AF37] text-[#0A1F44] px-10 py-4 rounded-full font-bold hover:bg-white hover:scale-105 transition-all duration-300 shadow-lg shadow-[#D4AF37]/20'
           >
-            Chat with an Advisor
+            Chat with an Advisor on WhatsApp
           </a>
         </div>
       </div>

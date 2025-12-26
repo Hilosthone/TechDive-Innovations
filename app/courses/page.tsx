@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { FaChevronDown } from 'react-icons/fa'
 
 const curriculumData = [
@@ -127,10 +127,28 @@ export default function CurriculumSection() {
   const [activeTab, setActiveTab] = useState('Development')
   const [openCourse, setOpenCourse] = useState<string | null>(null)
 
+  // 1. Properly typed Ref for an array of elements
+  const courseRefs = useRef<(HTMLDivElement | null)[]>([])
+
+  const handleToggleCourse = (courseTitle: string, index: number) => {
+    const isOpening = openCourse !== courseTitle
+    setOpenCourse(isOpening ? courseTitle : null)
+
+    // 2. Scroll logic: if opening, wait for animation and scroll into view
+    if (isOpening) {
+      setTimeout(() => {
+        courseRefs.current[index]?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center', // Keeps it perfectly centered for the student
+        })
+      }, 300)
+    }
+  }
+
   return (
     <section
       id='courses'
-      className='py-24 pt-32 px-6 bg-gray-50 overflow-hidden' 
+      className='py-24 pt-32 px-6 bg-gray-50 overflow-hidden'
     >
       <div className='max-w-7xl mx-auto'>
         <div className='text-center mb-16' data-aos='fade-up'>
@@ -154,6 +172,8 @@ export default function CurriculumSection() {
               onClick={() => {
                 setActiveTab(group.category)
                 setOpenCourse(null)
+                // Clear refs when tab changes to avoid index conflicts
+                courseRefs.current = []
               }}
               className={`px-8 py-3 rounded-full font-bold transition-all duration-300 border-2 ${
                 activeTab === group.category
@@ -173,20 +193,20 @@ export default function CurriculumSection() {
             ?.courses.map((course, index) => (
               <div
                 key={course.title}
+                // 3. Fixed TS Ref Callback: using {} to avoid implicit return
+                ref={(el) => {
+                  courseRefs.current[index] = el
+                }}
                 className={`rounded-2xl overflow-hidden transition-all duration-300 shadow-sm ${
                   openCourse === course.title
-                    ? 'border-[#D4AF37] ring-1 ring-[#D4AF37] bg-white'
+                    ? 'border-[#D4AF37] ring-1 ring-[#D4AF37] bg-white scale-[1.01]'
                     : 'border border-gray-100 bg-white hover:shadow-md'
                 }`}
                 data-aos='fade-up'
                 data-aos-delay={index * 50}
               >
                 <button
-                  onClick={() =>
-                    setOpenCourse(
-                      openCourse === course.title ? null : course.title
-                    )
-                  }
+                  onClick={() => handleToggleCourse(course.title, index)}
                   className='w-full flex flex-col md:flex-row md:items-center justify-between p-7 text-left transition-colors'
                 >
                   <div>
@@ -209,9 +229,9 @@ export default function CurriculumSection() {
                       ))}
                     </div>
                     <div
-                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 ${
                         openCourse === course.title
-                          ? 'bg-[#D4AF37] text-white rotate-180'
+                          ? 'bg-[#D4AF37] text-white rotate-180 shadow-md'
                           : 'bg-gray-100 text-gray-400'
                       }`}
                     >
